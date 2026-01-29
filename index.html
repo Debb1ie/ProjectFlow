@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Portal - Project Milestone Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink-black: #0a0a0a;
+            --paper-white: #fafaf8;
+            --slate-gray: #4a4a48;
+            --accent-gold: #d4a574;
+            --accent-emerald: #2d5f4f;
+            --soft-cream: #f5f1e8;
+            --border-subtle: #e0ddd2;
+            --shadow-editorial: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--soft-cream);
+            color: var(--ink-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Editorial Header */
+        .masthead {
+            background: var(--ink-black);
+            color: var(--paper-white);
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .masthead::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-emerald) 0%, transparent 100%);
+            opacity: 0.15;
+            animation: pulseGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 0.25; }
+        }
+
+        .masthead-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-text {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            font-weight: 500;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-section {
+            background: var(--paper-white);
+            padding: 4rem 2rem;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .auth-container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .section-subtitle {
+            color: var(--slate-gray);
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--border-subtle);
+            background: var(--soft-cream);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-emerald);
+            background: var(--paper-white);
+            box-shadow: 0 0 0 4px rgba(45, 95, 79, 0.08);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--ink-black);
+            color: var(--paper-white);
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-emerald);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(45, 95, 79, 0.3);
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--accent-emerald), var(--ink-black));
+            color: var(--paper-white);
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.2) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+
+        .welcome-banner h2 {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background: var(--paper-white);
+            border: 1px solid var(--border-subtle);
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .project-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gold);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s ease;
+        }
+
+        .project-card:hover {
+            transform: translateX(8px);
+            box-shadow: -8px 8px 32px var(--shadow-editorial);
+        }
+
+        .project-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-type {
+            display: inline-block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.4rem 0.8rem;
+            background: var(--soft-cream);
+            color: var(--slate-gray);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-in_progress { background: #e8f5e9; color: #2e7d32; }
+        .status-planning { background: #fff3e0; color: #e65100; }
+        .status-review { background: #e3f2fd; color: #1565c0; }
+        .status-completed { background: #f3e5f5; color: #6a1b9a; }
+
+        .project-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--slate-gray);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .progress-section {
+            margin-top: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-percentage {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-emerald);
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background: var(--soft-cream);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold));
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .milestones-section {
+            margin-top: 2rem;
+        }
+
+        .milestones-title {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: var(--slate-gray);
+        }
+
+        .milestone-item {
+            display: flex;
+            align-items: start;
+            padding: 1rem;
+            background: var(--soft-cream);
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .milestone-item:hover {
+            background: var(--paper-white);
+            transform: translateX(4px);
+        }
+
+        .milestone-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .milestone-completed {
+            background: var(--accent-emerald);
+            color: var(--paper-white);
+        }
+
+        .milestone-in_progress {
+            background: var(--accent-gold);
+            color: var(--ink-black);
+        }
+
+        .milestone-pending {
+            background: var(--border-subtle);
+            color: var(--slate-gray);
+        }
+
+        .milestone-content {
+            flex: 1;
+        }
+
+        .milestone-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .milestone-date {
+            font-size: 0.85rem;
+            color: var(--slate-gray);
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--paper-white);
+            color: var(--ink-black);
+            border: 2px solid var(--border-subtle);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .logout-btn:hover {
+            background: var(--ink-black);
+            color: var(--paper-white);
+            border-color: var(--ink-black);
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-text {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .project-card {
+                padding: 2rem;
+            }
+
+            .logout-btn {
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Masthead -->
+    <header class="masthead">
+        <div class="masthead-content">
+            <h1 class="logo-text">ProjectFlow</h1>
+            <p class="tagline">Client Portal</p>
+        </div>
+    </header>
+
+    <!-- Authentication Section -->
+    <section id="authSection" class="auth-section">
+        <div class="auth-container">
+            <h2 class="section-title">Welcome Back</h2>
+            <p class="section-subtitle">Access your projects and track progress in real-time</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="clientEmail">Email Address</label>
+                    <input type="email" id="clientEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="clientPassword">Password</label>
+                    <input type="password" id="clientPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Access Portal</button>
+            </form>
+            <p style="margin-top: 2rem; text-align: center; color: var(--slate-gray); font-size: 0.9rem;">
+                Demo: Use any email from the sample data (e.g., robert@techvision.com)
+            </p>
+        </div>
+    </section>
+
+    <!-- Dashboard Section (Hidden by default) -->
+    <section id="dashboardSection" class="dashboard hidden">
+        <button class="logout-btn" onclick="logout()">Log Out</button>
+        
+        <div class="welcome-banner">
+            <h2 id="welcomeName">Welcome Back</h2>
+            <p>Your projects are progressing smoothly. Here's the latest status.</p>
+        </div>
+
+        <div id="projectsContainer" class="projects-grid">
+            <!-- Projects will be dynamically loaded here -->
+        </div>
+    </section>
+
+    <script>
+        // Sample Data (In production, this would come from a backend API)
+        const sampleData = {
+            clients: [
+                {
+                    id: 1,
+                    company: "TechVision Inc",
+                    contact: "Robert Chen",
+                    email: "robert@techvision.com"
+                },
+                {
+                    id: 2,
+                    company: "GreenLeaf Organics",
+                    contact: "Maria Rodriguez",
+                    email: "maria@greenleaf.com"
+                },
+                {
+                    id: 3,
+                    company: "FinanceHub Solutions",
+                    contact: "David Kim",
+                    email: "david@financehub.com"
+                },
+                {
+                    id: 4,
+                    company: "CreativeMinds Studio",
+                    contact: "Emma Thompson",
+                    email: "emma@creativeminds.com"
+                }
+            ],
+            projects: [
+                {
+                    id: 1,
+                    clientId: 1,
+                    name: "E-Commerce Platform Redesign",
+                    type: "Web Development",
+                    status: "in_progress",
+                    startDate: "2025-01-15",
+                    deadline: "2025-04-30",
+                    budget: 125000,
+                    completion: 45,
+                    milestones: [
+                        { name: "Discovery & Research", status: "completed", date: "2025-01-31" },
+                        { name: "Design Phase", status: "completed", date: "2025-02-28" },
+                        { name: "Development - Phase 1", status: "in_progress", date: "2025-03-31" },
+                        { name: "Development - Phase 2", status: "pending", date: "2025-04-20" },
+                        { name: "Testing & Launch", status: "pending", date: "2025-04-30" }
+                    ]
+                },
+                {
+                    id: 2,
+                    clientId: 1,
+                    name: "Mobile App Development",
+                    type: "Mobile App",
+                    status: "planning",
+                    startDate: "2025-02-01",
+                    deadline: "2025-07-31",
+                    budget: 180000,
+                    completion: 10,
+                    milestones: [
+                        { name: "Requirements & Planning", status: "in_progress", date: "2025-02-15" },
+                        { name: "UI/UX Design", status: "pending", date: "2025-03-15" },
+                        { name: "iOS Development", status: "pending", date: "2025-05-31" },
+                        { name: "Android Development", status: "pending", date: "2025-06-30" },
+                        { name: "App Store Submission", status: "pending", date: "2025-07-31" }
+                    ]
+                },
+                {
+                    id: 3,
+                    clientId: 2,
+                    name: "Brand Identity Refresh",
+                    type: "Design",
+                    status: "in_progress",
+                    startDate: "2025-01-10",
+                    deadline: "2025-03-15",
+                    budget: 45000,
+                    completion: 65,
+                    milestones: [
+                        { name: "Brand Strategy Session", status: "completed", date: "2025-01-20" },
+                        { name: "Logo Concepts", status: "completed", date: "2025-02-05" },
+                        { name: "Brand Guidelines", status: "in_progress", date: "2025-02-28" },
+                        { name: "Marketing Collateral", status: "pending", date: "2025-03-15" }
+                    ]
+                },
+                {
+                    id: 4,
+                    clientId: 3,
+                    name: "Financial Dashboard System",
+                    type: "Web Development",
+                    status: "in_progress",
+                    startDate: "2024-12-01",
+                    deadline: "2025-03-31",
+                    budget: 95000,
+                    completion: 70,
+                    milestones: [
+                        { name: "System Architecture", status: "completed", date: "2024-12-20" },
+                        { name: "Backend Development", status: "completed", date: "2025-01-31" },
+                        { name: "Dashboard UI", status: "in_progress", date: "2025-02-28" },
+                        { name: "Integration & Testing", status: "pending", date: "2025-03-31" }
+                    ]
+                },
+                {
+                    id: 5,
+                    clientId: 4,
+                    name: "Marketing Campaign Platform",
+                    type: "Marketing",
+                    status: "review",
+                    startDate: "2024-11-15",
+                    deadline: "2025-02-28",
+                    budget: 67000,
+                    completion: 90,
+                    milestones: [
+                        { name: "Platform Setup", status: "completed", date: "2024-12-01" },
+                        { name: "Campaign Builder", status: "completed", date: "2024-12-31" },
+                        { name: "Analytics Dashboard", status: "completed", date: "2025-01-31" },
+                        { name: "User Acceptance Testing", status: "completed", date: "2025-02-15" },
+                        { name: "Training & Handover", status: "in_progress", date: "2025-02-28" }
+                    ]
+                }
+            ]
+        };
+
+        let currentClient = null;
+
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('clientEmail').value;
+            
+            // Find client by email
+            currentClient = sampleData.clients.find(c => c.email.toLowerCase() === email.toLowerCase());
+            
+            if (currentClient) {
+                showDashboard();
+            } else {
+                alert('Client not found. Try: robert@techvision.com, maria@greenleaf.com, david@financehub.com, or emma@creativeminds.com');
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('welcomeName').textContent = `Welcome, ${currentClient.contact}`;
+            loadProjects();
+        }
+
+        function loadProjects() {
+            const container = document.getElementById('projectsContainer');
+            const clientProjects = sampleData.projects.filter(p => p.clientId === currentClient.id);
+            
+            container.innerHTML = clientProjects.map(project => `
+                <div class="project-card">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">${project.name}</h3>
+                            <span class="project-type">${project.type}</span>
+                        </div>
+                        <span class="status-badge status-${project.status}">
+                            ${project.status.replace('_', ' ')}
+                        </span>
+                    </div>
+                    
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Start Date</span>
+                            <span class="meta-value">${formatDate(project.startDate)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Deadline</span>
+                            <span class="meta-value">${formatDate(project.deadline)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Budget</span>
+                            <span class="meta-value">$${project.budget.toLocaleString()}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Milestones</span>
+                            <span class="meta-value">${project.milestones.filter(m => m.status === 'completed').length} / ${project.milestones.length}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label">Overall Progress</span>
+                            <span class="progress-percentage">${project.completion}%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${project.completion}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="milestones-section">
+                        <h4 class="milestones-title">Project Milestones</h4>
+                        ${project.milestones.map(milestone => `
+                            <div class="milestone-item">
+                                <div class="milestone-icon milestone-${milestone.status}">
+                                    ${milestone.status === 'completed' ? '✓' : milestone.status === 'in_progress' ? '◐' : '○'}
+                                </div>
+                                <div class="milestone-content">
+                                    <div class="milestone-name">${milestone.name}</div>
+                                    <div class="milestone-date">Due: ${formatDate(milestone.date)}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function logout() {
+            currentClient = null;
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+    </script>
+</body>
+</html>
