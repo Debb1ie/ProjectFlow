@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ProjectFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink-black: #0a0a0a;
+            --paper-white: #fafaf8;
+            --slate-gray: #4a4a48;
+            --accent-gold: #d4a574;
+            --accent-emerald: #2d5f4f;
+            --soft-cream: #f5f1e8;
+            --border-subtle: #e0ddd2;
+            --shadow-editorial: rgba(0, 0, 0, 0.08);
+            --danger-red: #c62828;
+            --warning-orange: #ef6c00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--soft-cream);
+            color: var(--ink-black);
+            line-height: 1.6;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--ink-black);
+            color: var(--paper-white);
+            padding: 2rem 0;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-gold);
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--accent-gold);
+        }
+
+        .nav-item.active {
+            background: rgba(212, 165, 116, 0.15);
+            border-left-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem 3rem;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--slate-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--paper-white);
+            padding: 2rem;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold));
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--slate-gray);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            color: var(--accent-emerald);
+            font-weight: 500;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 1.8rem;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--ink-black);
+            color: var(--paper-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-emerald);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(45, 95, 79, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--paper-white);
+            color: var(--ink-black);
+            border: 2px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--ink-black);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            padding-left: 2.8rem;
+            border: 2px solid var(--border-subtle);
+            background: var(--paper-white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-emerald);
+            box-shadow: 0 0 0 4px rgba(45, 95, 79, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-gray);
+        }
+
+        /* Data Table */
+        .data-table-container {
+            background: var(--paper-white);
+            border: 1px solid var(--border-subtle);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            background: var(--soft-cream);
+        }
+
+        .data-table th {
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            color: var(--slate-gray);
+            border-bottom: 2px solid var(--border-subtle);
+        }
+
+        .data-table td {
+            padding: 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .data-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--soft-cream);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .action-icon {
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--slate-gray);
+            transition: all 0.2s ease;
+        }
+
+        .action-icon:hover {
+            color: var(--accent-emerald);
+        }
+
+        .action-icon.delete:hover {
+            color: var(--danger-red);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 2px;
+        }
+
+        .badge-success { background: #e8f5e9; color: #2e7d32; }
+        .badge-warning { background: #fff3e0; color: #e65100; }
+        .badge-info { background: #e3f2fd; color: #1565c0; }
+        .badge-purple { background: #f3e5f5; color: #6a1b9a; }
+        .badge-danger { background: #ffebee; color: #c62828; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--paper-white);
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--slate-gray);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border-subtle);
+            background: var(--soft-cream);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-emerald);
+            background: var(--paper-white);
+            box-shadow: 0 0 0 4px rgba(45, 95, 79, 0.08);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .client-card {
+            background: var(--paper-white);
+            border: 1px solid var(--border-subtle);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .client-card:hover {
+            transform: translateX(4px);
+            box-shadow: -4px 4px 16px var(--shadow-editorial);
+        }
+
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .client-name {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .client-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-item {
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            color: var(--slate-gray);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.mobile-active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-logo">ProjectFlow</h1>
+            <p class="sidebar-subtitle">Admin Dashboard</p>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item active" onclick="showSection('overview')">
+                <span class="nav-icon">📊</span>
+                <span>Overview</span>
+            </div>
+            <div class="nav-item" onclick="showSection('projects')">
+                <span class="nav-icon">📁</span>
+                <span>Projects</span>
+            </div>
+            <div class="nav-item" onclick="showSection('clients')">
+                <span class="nav-icon">👥</span>
+                <span>Clients</span>
+            </div>
+            <div class="nav-item" onclick="showSection('invoices')">
+                <span class="nav-icon">💰</span>
+                <span>Invoices</span>
+            </div>
+            <div class="nav-item" onclick="showSection('milestones')">
+                <span class="nav-icon">🎯</span>
+                <span>Milestones</span>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Overview Section -->
+        <section id="overview" class="section active">
+            <div class="page-header">
+                <h2 class="page-title">Dashboard Overview</h2>
+                <p class="page-subtitle">Real-time insights into your business operations</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Active Projects</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-change">↑ 2 new this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Clients</div>
+                    <div class="stat-value">4</div>
+                    <div class="stat-change">All active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Revenue YTD</div>
+                    <div class="stat-value">$512K</div>
+                    <div class="stat-change">↑ 18% vs last year</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Invoices</div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-change">$32,400 outstanding</div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <h3 style="font-family: 'Bodoni Moda', serif; font-size: 1.8rem;">Recent Activity</h3>
+            </div>
+
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Deadline</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Marketing Campaign Platform</strong></td>
+                            <td>CreativeMinds Studio</td>
+                            <td><span class="badge badge-purple">Review</span></td>
+                            <td>90%</td>
+                            <td>Feb 28, 2025</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial Dashboard System</strong></td>
+                            <td>FinanceHub Solutions</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>70%</td>
+                            <td>Mar 31, 2025</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Brand Identity Refresh</strong></td>
+                            <td>GreenLeaf Organics</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>65%</td>
+                            <td>Mar 15, 2025</td>
+                        </tr>
+                        <tr>
+                            <td><strong>E-Commerce Platform Redesign</strong></td>
+                            <td>TechVision Inc</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>45%</td>
+                            <td>Apr 30, 2025</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="page-header">
+                <h2 class="page-title">Projects Management</h2>
+                <p class="page-subtitle">Manage all client projects and track progress</p>
+            </div>
+
+            <div class="action-bar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search projects...">
+                </div>
+                <button class="btn btn-primary" onclick="openModal('project')">+ New Project</button>
+            </div>
+
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Client</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Budget</th>
+                            <th>Progress</th>
+                            <th>Deadline</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectsTableBody">
+                        <tr>
+                            <td><strong>E-Commerce Platform Redesign</strong></td>
+                            <td>TechVision Inc</td>
+                            <td>Web Development</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>$125,000</td>
+                            <td>45%</td>
+                            <td>Apr 30, 2025</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon delete" title="Delete">🗑️</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mobile App Development</strong></td>
+                            <td>TechVision Inc</td>
+                            <td>Mobile App</td>
+                            <td><span class="badge badge-warning">Planning</span></td>
+                            <td>$180,000</td>
+                            <td>10%</td>
+                            <td>Jul 31, 2025</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon delete" title="Delete">🗑️</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Brand Identity Refresh</strong></td>
+                            <td>GreenLeaf Organics</td>
+                            <td>Design</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>$45,000</td>
+                            <td>65%</td>
+                            <td>Mar 15, 2025</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon delete" title="Delete">🗑️</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial Dashboard System</strong></td>
+                            <td>FinanceHub Solutions</td>
+                            <td>Web Development</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>$95,000</td>
+                            <td>70%</td>
+                            <td>Mar 31, 2025</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon delete" title="Delete">🗑️</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Marketing Campaign Platform</strong></td>
+                            <td>CreativeMinds Studio</td>
+                            <td>Marketing</td>
+                            <td><span class="badge badge-purple">Review</span></td>
+                            <td>$67,000</td>
+                            <td>90%</td>
+                            <td>Feb 28, 2025</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon delete" title="Delete">🗑️</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Clients Section -->
+        <section id="clients" class="section">
+            <div class="page-header">
+                <h2 class="page-title">Clients Directory</h2>
+                <p class="page-subtitle">Manage your client relationships and information</p>
+            </div>
+
+            <div class="action-bar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search clients...">
+                </div>
+                <button class="btn btn-primary" onclick="openModal('client')">+ New Client</button>
+            </div>
+
+            <div id="clientsContainer">
+                <div class="client-card">
+                    <div class="client-header">
+                        <div>
+                            <h3 class="client-name">TechVision Inc</h3>
+                            <p style="color: var(--slate-gray); margin-top: 0.3rem;">Technology Industry</p>
+                        </div>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                    <div class="client-info">
+                        <div class="info-item">
+                            <div class="info-label">Contact Person</div>
+                            <div>Robert Chen</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div>robert@techvision.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div>+1-555-0101</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Active Projects</div>
+                            <div><strong>2 projects</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <div class="client-header">
+                        <div>
+                            <h3 class="client-name">GreenLeaf Organics</h3>
+                            <p style="color: var(--slate-gray); margin-top: 0.3rem;">Retail Industry</p>
+                        </div>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                    <div class="client-info">
+                        <div class="info-item">
+                            <div class="info-label">Contact Person</div>
+                            <div>Maria Rodriguez</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div>maria@greenleaf.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div>+1-555-0102</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Active Projects</div>
+                            <div><strong>1 project</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <div class="client-header">
+                        <div>
+                            <h3 class="client-name">FinanceHub Solutions</h3>
+                            <p style="color: var(--slate-gray); margin-top: 0.3rem;">Finance Industry</p>
+                        </div>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                    <div class="client-info">
+                        <div class="info-item">
+                            <div class="info-label">Contact Person</div>
+                            <div>David Kim</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div>david@financehub.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div>+1-555-0103</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Active Projects</div>
+                            <div><strong>1 project</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="client-card">
+                    <div class="client-header">
+                        <div>
+                            <h3 class="client-name">CreativeMinds Studio</h3>
+                            <p style="color: var(--slate-gray); margin-top: 0.3rem;">Design Industry</p>
+                        </div>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                    <div class="client-info">
+                        <div class="info-item">
+                            <div class="info-label">Contact Person</div>
+                            <div>Emma Thompson</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div>emma@creativeminds.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div>+1-555-0104</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Active Projects</div>
+                            <div><strong>1 project</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invoices Section -->
+        <section id="invoices" class="section">
+            <div class="page-header">
+                <h2 class="page-title">Invoice Management</h2>
+                <p class="page-subtitle">Track payments and billing</p>
+            </div>
+
+            <div class="action-bar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search invoices...">
+                </div>
+                <button class="btn btn-primary" onclick="openModal('invoice')">+ New Invoice</button>
+            </div>
+
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Client</th>
+                            <th>Project</th>
+                            <th>Issue Date</th>
+                            <th>Due Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>INV-2025-006</strong></td>
+                            <td>FinanceHub Solutions</td>
+                            <td>Financial Dashboard System</td>
+                            <td>Feb 01, 2025</td>
+                            <td>Feb 15, 2025</td>
+                            <td><strong>$32,400</strong></td>
+                            <td><span class="badge badge-info">Sent</span></td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon" title="Download">⬇️</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>INV-2025-005</strong></td>
+                            <td>FinanceHub Solutions</td>
+                            <td>Financial Dashboard System</td>
+                            <td>Dec 22, 2024</td>
+                            <td>Jan 05, 2025</td>
+                            <td><strong>$16,200</strong></td>
+                            <td><span class="badge badge-success">Paid</span></td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon" title="Download">⬇️</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>INV-2025-008</strong></td>
+                            <td>CreativeMinds Studio</td>
+                            <td>Marketing Campaign Platform</td>
+                            <td>Jan 05, 2025</td>
+                            <td>Jan 19, 2025</td>
+                            <td><strong>$40,850</strong></td>
+                            <td><span class="badge badge-success">Paid</span></td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon" title="Download">⬇️</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>INV-2025-003</strong></td>
+                            <td>GreenLeaf Organics</td>
+                            <td>Brand Identity Refresh</td>
+                            <td>Jan 25, 2025</td>
+                            <td>Feb 08, 2025</td>
+                            <td><strong>$8,560</strong></td>
+                            <td><span class="badge badge-success">Paid</span></td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="View">👁️</span>
+                                <span class="action-icon" title="Download">⬇️</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Milestones Section -->
+        <section id="milestones" class="section">
+            <div class="page-header">
+                <h2 class="page-title">Milestone Tracker</h2>
+                <p class="page-subtitle">Monitor project milestones and deliverables</p>
+            </div>
+
+            <div class="action-bar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search milestones...">
+                </div>
+                <button class="btn btn-primary" onclick="openModal('milestone')">+ New Milestone</button>
+            </div>
+
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>Project</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Development - Phase 1</strong></td>
+                            <td>E-Commerce Platform Redesign</td>
+                            <td>Mar 31, 2025</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>$35,000</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="Complete">✓</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Brand Guidelines</strong></td>
+                            <td>Brand Identity Refresh</td>
+                            <td>Feb 28, 2025</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>$15,000</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="Complete">✓</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dashboard UI</strong></td>
+                            <td>Financial Dashboard System</td>
+                            <td>Feb 28, 2025</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>$25,000</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="Complete">✓</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Training & Handover</strong></td>
+                            <td>Marketing Campaign Platform</td>
+                            <td>Feb 28, 2025</td>
+                            <td><span class="badge badge-success">In Progress</span></td>
+                            <td>$7,000</td>
+                            <td class="table-actions">
+                                <span class="action-icon" title="Edit">✏️</span>
+                                <span class="action-icon" title="Complete">✓</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Adding/Editing -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">New Project</h3>
+            </div>
+            <form id="modalForm">
+                <div class="form-grid" id="formFields">
+                    <!-- Form fields will be dynamically generated -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked nav item
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        // Modal Functions
+        function openModal(type) {
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modalTitle');
+            const formFields = document.getElementById('formFields');
+            
+            // Set title and generate form fields based on type
+            switch(type) {
+                case 'project':
+                    title.textContent = 'New Project';
+                    formFields.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label">Project Name</label>
+                            <input type="text" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Client</label>
+                            <select class="form-select" required>
+                                <option value="">Select Client</option>
+                                <option>TechVision Inc</option>
+                                <option>GreenLeaf Organics</option>
+                                <option>FinanceHub Solutions</option>
+                                <option>CreativeMinds Studio</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Project Type</label>
+                            <select class="form-select" required>
+                                <option value="">Select Type</option>
+                                <option>Web Development</option>
+                                <option>Mobile App</option>
+                                <option>Design</option>
+                                <option>Consulting</option>
+                                <option>Marketing</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Budget</label>
+                            <input type="number" class="form-input" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Deadline</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea" placeholder="Project description..."></textarea>
+                        </div>
+                    `;
+                    break;
+                case 'client':
+                    title.textContent = 'New Client';
+                    formFields.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Person</label>
+                            <input type="text" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Industry</label>
+                            <input type="text" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-textarea"></textarea>
+                        </div>
+                    `;
+                    break;
+                case 'invoice':
+                    title.textContent = 'New Invoice';
+                    formFields.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label">Invoice Number</label>
+                            <input type="text" class="form-input" value="INV-2025-009" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Project</label>
+                            <select class="form-select" required>
+                                <option value="">Select Project</option>
+                                <option>E-Commerce Platform Redesign</option>
+                                <option>Mobile App Development</option>
+                                <option>Brand Identity Refresh</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-input" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Issue Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-textarea"></textarea>
+                        </div>
+                    `;
+                    break;
+                case 'milestone':
+                    title.textContent = 'New Milestone';
+                    formFields.innerHTML = `
+                        <div class="form-group">
+                            <label class="form-label">Milestone Name</label>
+                            <input type="text" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Project</label>
+                            <select class="form-select" required>
+                                <option value="">Select Project</option>
+                                <option>E-Commerce Platform Redesign</option>
+                                <option>Mobile App Development</option>
+                                <option>Brand Identity Refresh</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Payment Amount</label>
+                            <input type="number" class="form-input" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea"></textarea>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Form submission
+        document.getElementById('modalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! (In production, this would save to database)');
+            closeModal();
+        });
+    </script>
+</body>
+</html>
